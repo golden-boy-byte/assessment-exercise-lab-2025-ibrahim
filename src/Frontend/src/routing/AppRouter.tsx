@@ -11,7 +11,6 @@ export default function AppRoutes() {
       <Route path="/SupplierList" element={<SupplierListPage />} />
       <Route path="/CustomerList" element={<CustomerListPage />} />
       <Route path="/EmployeeList" element={<EmployeeListPage />} />
-      
     </Routes>
   );
 }

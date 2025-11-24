@@ -16,6 +16,7 @@ public class CustomerListQueryResponse
     public string Address {get; set;} = "";
     public string Email {get; set;} = "";
     public string Phone {get; set;} = "";
+    public string Iban {get; set;} = "";
     public CustomerListQueryResponseCustomerCategory? Category {get; set; }
 }
 
@@ -49,7 +50,8 @@ internal class CustomerListQueryHandler(BackendContext context): IRequestHandler
                     Name =  item.Name,
                     Address =  item.Address,
                     Email =  item.Email,
-                    Phone =  item.Phone
+                    Phone =  item.Phone,
+                    Iban = item.Iban
                 };
                 
                 var customerCategory = await context.CustomerCategories.SingleOrDefaultAsync(q => q.Id == item.CustomerCategoryId, cancellationToken);

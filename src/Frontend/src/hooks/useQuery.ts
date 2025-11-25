@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export const useQuery = <T, P>(queryFn: (params?: P) => Promise<T[]>) => {
   const [list, setList] = useState<T[]>([]);
@@ -25,6 +25,10 @@ export const useQuery = <T, P>(queryFn: (params?: P) => Promise<T[]>) => {
     },
     [queryFn]
   );
+
+  useEffect(() => {
+    sendQuery();
+  }, [sendQuery]);
 
   return {
     sendQuery,

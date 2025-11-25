@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Typography } from "@mui/material";
 import Filters from "./components/Filters";
 import { DataTable, type Column } from "../../components/DataTable";
@@ -54,10 +53,6 @@ export default function CustomerListPage() {
       render: (c) => c.category?.description ?? "N/A",
     },
   ];
-
-  useEffect(() => {
-    sendQuery();
-  }, [sendQuery]);
 
   return (
     <>

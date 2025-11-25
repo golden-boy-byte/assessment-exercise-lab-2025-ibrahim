@@ -1,4 +1,4 @@
-import { TextField, Box, Button } from "@mui/material";
+import { TextField, Button, Paper } from "@mui/material";
 import { useRef } from "react";
 
 interface FiltersProps {
@@ -12,33 +12,46 @@ const Filters: React.FC<FiltersProps> = (props) => {
   const emailRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Box
-      component="form"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSearch(nameRef.current?.value ?? "", emailRef.current?.value ?? "");
+    <Paper
+      elevation={1}
+      sx={{
+        p: 2,
+        mb: 2,
+        display: "flex",
+        justifyContent: "center",
+        flexWrap: "wrap",
       }}
-      sx={{ display: "flex", gap: 2, justifyContent: "center", mb: 2 }}
     >
-      <TextField
-        inputRef={nameRef}
-        label="Name"
-        variant="outlined"
-        size="small"
-      />
-      <TextField
-        inputRef={emailRef}
-        label="Email"
-        variant="outlined"
-        size="small"
-      />
-      <Button type="submit" variant="contained">
-        Search
-      </Button>
-      <Button onClick={onExport} variant="outlined">
-        Export XML
-      </Button>
-    </Box>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSearch(nameRef.current?.value ?? "", emailRef.current?.value ?? "");
+        }}
+        style={{
+          display: "flex",
+          gap: "8px",
+        }}
+      >
+        <TextField
+          inputRef={nameRef}
+          label="Name"
+          variant="outlined"
+          size="small"
+        />
+        <TextField
+          inputRef={emailRef}
+          label="Email"
+          variant="outlined"
+          size="small"
+        />
+        <Button type="submit" variant="contained">
+          Search
+        </Button>
+        <Button onClick={onExport} variant="outlined">
+          Export XML
+        </Button>
+      </form>
+    </Paper>
   );
 };
 

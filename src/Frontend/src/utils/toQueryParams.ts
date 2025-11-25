@@ -1,4 +1,6 @@
-export default function toQueryParams(obj: Record<string, string>): string {
+export default function toQueryParams(obj?: Record<string, string>): string {
+  if (!obj) return "";
+
   const query = Object.entries(obj)
     .filter(([, value]) => Boolean(value)) // only truthy values
     .map(

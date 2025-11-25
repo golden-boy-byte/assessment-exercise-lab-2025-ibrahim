@@ -1,28 +1,17 @@
-import { useEffect, useRef } from "react";
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  styled,
-  tableCellClasses,
-} from "@mui/material";
-import Loader from "../../components/Loader";
-import exportListAsXML from "../../utils/exportAsXMLFile";
-import { useGetCustomers } from "./useGetCustomers";
+import { useEffect } from "react";
+import { Typography } from "@mui/material";
 import Filters from "./components/Filters";
+import { DataTable, type Column } from "../../components/DataTable";
+import Loader from "../../components/Loader";
+import { useQuery } from "../../hooks/useQuery";
+import exportListAsXML from "../../utils/exportAsXMLFile";
+import { type Customer, getCustomers } from "./getCustomers";
 
 const isEmailValid = (email: string) =>
   !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 export default function CustomerListPage() {
-  const { getCustomers, list, isLoading } = useGetCustomers();
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const { sendQuery, isLoading, list } = useQuery(getCustomers);
 
   const handleSearch = (name: string, email: string) => {
     if (email && isEmailValid(email)) {
@@ -30,7 +19,7 @@ export default function CustomerListPage() {
       return;
     }
 
-    getCustomers({ name, email });
+    sendQuery({ name, email });
   };
 
   const handleExport = () => {
@@ -53,12 +42,22 @@ export default function CustomerListPage() {
     });
   };
 
+  const columns: Column<Customer>[] = [
+    { label: "Name", render: (c) => c.name },
+    { label: "Address", render: (c) => c.address },
+    { label: "Email", render: (c) => c.email },
+    { label: "Phone", render: (c) => c.phone },
+    { label: "Iban", render: (c) => c.iban },
+    { label: "Category Code", render: (c) => c.category?.code ?? "N/A" },
+    {
+      label: "Category Description",
+      render: (c) => c.category?.description ?? "N/A",
+    },
+  ];
+
   useEffect(() => {
-    getCustomers({
-      name: nameRef.current?.value ?? "",
-      email: emailRef.current?.value ?? "",
-    });
-  }, [getCustomers]);
+    sendQuery();
+  }, [sendQuery]);
 
   return (
     <>
@@ -66,58 +65,8 @@ export default function CustomerListPage() {
       <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
         Customers
       </Typography>
-
       <Filters onExport={handleExport} onSearch={handleSearch} />
-
-      <TableContainer
-        component={Paper}
-        sx={{ maxHeight: 500, overflow: "auto" }}
-      >
-        <Table sx={{ minWidth: 650 }} stickyHeader aria-label="customers table">
-          <TableHead>
-            <TableRow>
-              <StyledTableHeadCell>Name</StyledTableHeadCell>
-              <StyledTableHeadCell>Address</StyledTableHeadCell>
-              <StyledTableHeadCell>Email</StyledTableHeadCell>
-              <StyledTableHeadCell>Phone</StyledTableHeadCell>
-              <StyledTableHeadCell>Iban</StyledTableHeadCell>
-              <StyledTableHeadCell>Category Code</StyledTableHeadCell>
-              <StyledTableHeadCell>Category Description</StyledTableHeadCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {list.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No data available
-                </TableCell>
-              </TableRow>
-            ) : (
-              list.map((row) => (
-                <TableRow
-                  key={row.id}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.address}</TableCell>
-                  <TableCell>{row.email}</TableCell>
-                  <TableCell>{row.phone}</TableCell>
-                  <TableCell>{row.iban}</TableCell>
-                  <TableCell>{row.category?.code ?? "N/A"}</TableCell>
-                  <TableCell>{row.category?.description ?? "N/A"}</TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <DataTable columns={columns} data={list} height={500} />
     </>
   );
 }
-
-const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-}));

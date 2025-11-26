@@ -1,8 +1,10 @@
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "../pages/HomePage";
-import CustomerListPage from "../pages/CustomerListPage";
-import EmployeeListPage from "../pages/EmployeeListPage";
-import SupplierListPage from "../pages/SupplierListPage";
+
+const CustomerListPage = lazy(() => import("../pages/CustomerListPage"));
+const EmployeeListPage = lazy(() => import("../pages/EmployeeListPage"));
+const SupplierListPage = lazy(() => import("../pages/SupplierListPage"));
 
 export default function AppRoutes() {
   return (

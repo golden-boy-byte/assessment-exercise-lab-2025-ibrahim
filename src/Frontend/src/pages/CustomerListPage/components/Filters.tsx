@@ -25,7 +25,10 @@ const Filters: React.FC<FiltersProps> = (props) => {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSearch(nameRef.current?.value ?? "", emailRef.current?.value ?? "");
+          const name = nameRef.current?.value ?? "";
+          const email = emailRef.current?.value ?? "";
+
+          onSearch(name.trim(), email.trim());
         }}
         style={{
           display: "flex",
